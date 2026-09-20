@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">TECHCARE TEKNOLOGI - Katalog Produk</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151c2c;
+            --primary: #f97316;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #1f293d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding-bottom: 90px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background-color: #0d1322;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* HEADER */
+        header {
+            background-color: #111827;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .store-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #1f293d;
+            border: 1px solid var(--border-color);
+        }
+
+        .brand-title h1 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+
+        .brand-title p {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .btn-admin {
+            background: #1f2937;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-box {
+            width: 100%;
+            background: #1f293d;
+            border: 1px solid #374151;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .container {
+            padding: 15px;
+        }
+
+        /* BANNER PROMO */
+        .promo-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .promo-badge {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .promo-banner h2 {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .promo-banner p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* SECTION HEADER */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .admin-action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-add-cat {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-store-settings {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* GRID PRODUK */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: #1f293d;
+        }
+
+        .product-info {
+            padding: 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cat-tag {
+            font-size: 9px;
+            color: var(--primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .price-container {
+            margin-top: auto;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .original-price {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .product-price {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .btn-buy {
+            background: #1f293d;
+            color: #fff;
+            border: 1px solid #374151;
+            width: 100%;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn-buy:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .admin-btns {
+            display: flex;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .admin-btns button {
+            flex: 1;
+            padding: 4px;
+            font-size: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit { background: #eab308; color: black; }
+        .btn-del { background: #ef4444; color: white; }
+
+        /* BOTTOM BAR */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #111827;
+            border-top: 1px solid var(--border-color);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 99;
+        }
+
+        .cart-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            background: #1f293d;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #111827;
+        }
+
+        .cart-total-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .btn-checkout {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #151c2c;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            color: white;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            background: #0b0f19;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .price-group-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .price-group-row .form-group {
+            flex: 1;
+        }
+
+        .img-preview-box {
+            width: 100%;
+            height: 100px;
+            background: #0b0f19;
+            border: 1px dashed #374151;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .img-preview-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .img-option-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .img-option-tabs label {
+            font-size: 11px;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* KERANJANG MODAL LIST */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-title {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .cart-item-price {
+            font-size: 11px;
+            color: var(--primary);
+        }
+
+        .cart-qty-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-qty {
+            background: #1f293d;
+            border: 1px solid #374151;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .customer-section {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .customer-section h4 {
+            font-size: 12px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .address-options {
+            display: flex;
+            gap: 12px;
+            background: #0b0f19;
+            padding: 8px 10px;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .address-options label {
+            font-size: 11px;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 0;
+        }
+
+        .cat-list-admin {
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+
+        .cat-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #1f293d;
+            font-size: 12px;
+        }
+
+        .btn-del-cat {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <header>
+        <div class="header-top">
+            <div class="brand-container">
+                <img id="displayStoreLogo" src="" class="store-logo" alt="Logo" style="display:none;">
+                <div class="brand-title">
+                    <h1 id="displayStoreName">TECHCARE TEKNOLOGI</h1>
+                    <p id="displayStoreSlogan">Solusi & Sparepart Terpercaya</p>
+                </div>
+            </div>
+            <button class="btn-admin" id="btnAdminAuth" onclick="aksesAdmin()">🔒 Login Admin</button>
+        </div>
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 Cari produk..." onkeyup="filterProducts()">
+    </header>
+
+    <div class="container">
+        <div class="promo-banner">
+            <span class="promo-badge">⚡ PROMO SPESIAL</span>
+            <h2 id="promoStoreTitle">TECHCARE PROMO & DISKON</h2>
+            <p>Solusi Kebutuhan Teknologi Terpercaya</p>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Katalog Produk</span>
+            <div class="admin-action-btns" id="adminButtons" style="display: none;">
+                <button class="btn-store-settings" onclick="openStoreModal()">⚙️ Profil & Admin</button>
+                <button class="btn-add-cat" onclick="openCatModal()">📁 Kategori</button>
+                <button class="btn-add" onclick="openProductModal('add')">+ Produk</button>
+            </div>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+        <div class="cart-info" onclick="bukaKeranjangModal()">
+            <div class="cart-icon-wrapper">
+                🛒
+                <span class="cart-badge" id="cartBadgeCount">0</span>
+            </div>
+            <div>
+                <span style="font-size:9px; color:var(--text-muted); display:block;">TOTAL PESANAN (<span id="cartTotalItemsText">0 item</span>)</span>
+                <span class="cart-total-price" id="barTotal">Rp 0</span>
+            </div>
+        </div>
+        <button class="btn-checkout" onclick="bukaKeranjangModal()">Checkout WA ➔</button>
+    </div>
+</div>
+
+<!-- MODAL EDIT PROFIL TOKO & PENGATURAN ADMIN (WA & PASSWORD) -->
+<div class="modal" id="storeModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>⚙️ Pengaturan Toko & Admin</span>
+            <button onclick="closeStoreModal()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+        </div>
+        <form onsubmit="saveStoreSettings(event)">
+            <div class="form-group">
+                <label>Nama Toko</label>
+                <input type="text" id="inputStoreName" required placeholder="Masukkan nama toko...">
+            </div>
+            <div class="form-group">
+                <label>Slogan / Subtitle Toko</label>
+                <input type="text" id="inputStoreSlogan" placeholder="Contoh: Solusi & Sparepart Terpercaya">
+            </div>
+
+            <div class="form-group">
+                <label>Nomor WhatsApp Toko (Awali dengan 62)</label>
+                <input type="tel" id="inputStoreWa" required placeholder="Contoh: 628123456789">
+            </div>
+
+            <div class="form-group">
+                <label>Password Admin Baru (Kosongkan jika tidak diubah)</label>
+                <input type="password" id="inputAdminPass" placeholder="Password admin baru...">
+            </div>
+
+            <div class="form-group">
+                <label>Logo Toko</label>
+                <div class="img-option-tabs">
+                    <label><input type="radio" name="logoSource" value="file" checked onclick="toggleLogoInput('file')"> Upload File</label>
+                    <label><input type="radio" name="logoSource" value="url" onclick="toggleLogoInput('url')"> Link URL</label>
+                </div>
+
+                <div id="boxLogoFile">
+                    <input type="file" id="logoFile" accept="image/*" onchange="handleLogoFileSelect(event)">
+                </div>
+
+                <div id="boxLogoUrl" style="display: none;">
+                    <input type="url" id="logoUrl" placeholder="https://example.com/logo.png" oninput="handleLogoUrlSelect(event)">
+                </div>
+
+                <input type="hidden" id="storeLogoData">
+
+                <div class="img-preview-box">
+                    <img id="logoPreview" src="" alt="Preview Logo" style="display:none;">
+                    <span id="logoPreviewPlaceholder" style="font-size:10px; color:var(--text-muted);">Belum ada logo</span>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                <button type="button" onclick="closeStoreModal()" style="background:#374151; color:white; border:none; padding:8px 12px; border-radius:6px;">Batal</button>
+                <button type="submit" class="btn-add" style="padding:8px 12px;">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL KERANJANG BELANJA + FORM PEMBELI -->
+<div class="modal" id="cartModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>🛒 Detail Keranjang Belanja</span>
+            <button onclick="closeCartModal()" style="background:none; border:none; color:white; cursor:pointer; font-size:16px;">✕</button>
+        </div>
+        
+        <div id="cartItemsList"></div>
+        
+        <div style="margin-top:15px; border-top:1px solid var(--border-color); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; color:var(--text-muted);">Total Tagihan:</span>
+            <span id="modalCartTotal" style="font-size:15px; font-weight:bold; color:var(--primary);">Rp 0</span>
+        </div>
+
+        <div class="customer-section">
+            <h4>📋 Data Pemesan / Pengiriman</h4>
+            <div class="form-group">
+                <label>Nama Lengkap *</label>
+                <input type="text" id="custName" placeholder="Masukkan nama pemesan..." required>
+            </div>
+            <div class="form-group">
+                <label>Nomor HP / WhatsApp *</label>
+                <input type="tel" id="custPhone" placeholder="Contoh: 081234567890" required>
+            </div>
+
+            <div class="form-group">
+                <label>Metode Alamat Pengiriman *</label>
+                <div class="address-options">
+                    <label>
+                        <input type="radio" name="addrMethod" value="manual" checked onclick="toggleAlamatMethod('manual')"> Ketik Manual
+                    </label>
+                    <label>
+                        <input type="radio" name="addrMethod" value="maps" onclick="toggleAlamatMethod('maps')"> Link Google Maps
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" id="containerAlamatManual">
+                <label>Alamat Lengkap Pengiriman *</label>
+                <textarea id="custAddress" placeholder="Jalan, RT/RW, Desa/Kelurahan, Kecamatan, Kota/Kabupaten..."></textarea>
+            </div>
+
+            <div class="form-group" id="containerAlamatMaps" style="display: none;">
+                <label>Link Google Maps / Titik Lokasi *</label>
+                <input type="url" id="custMaps" placeholder="Paste link dari Google Maps di sini...">
+                <small style="color: var(--text-muted); font-size: 10px; display: block; margin-top: 4px;">
+                    💡 Buka Google Maps > Pilih Lokasi > Bagikan (Share) > Salin Link
+                </small>
+            </div>
+        </div>
+
+        <button class="btn-checkout" style="width:100%; margin-top:15px; justify-content:center; padding:12px;" onclick="checkoutWhatsApp()">Kirim Pesanan ke WhatsApp ➔</button>
+    </div>
+</div>
+
+<!-- MODAL KELOLA KATEGORI (KHUSUS ADMIN) -->
+<div class="modal" id="catModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>Kelola Kategori Produk</span>
+            <button onclick="closeCatModal()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+        </div>
+        <form onsubmit="saveCategory(event)">
+            <div class="form-group">
+                <label>Tambah Kategori Baru</label>
+                <div style="display:flex; gap:6px;">
+                    <input type="text" id="newCatName" required placeholder="Contoh: Aksesoris, Networking">
+                    <button type="submit" class="btn-add-cat" style="white-space:nowrap;">+ Tambah</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="cat-list-admin">
+            <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:8px;">Daftar Kategori Saat Ini:</label>
+            <div id="adminCatList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TAMBAH / EDIT PRODUK -->
+<div class="modal" id="productModal">
+    <div class="modal-content">
+        <div class="modal-header" id="modalTitle">Tambah Produk</div>
+        <form id="productForm" onsubmit="saveProduct(event)">
+            <input type="hidden" id="editIndex">
+            <div class="form-group">
+                <label>Nama Produk</label>
+                <input type="text" id="pName" required placeholder="Contoh: CCTV Hikvision">
+            </div>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="pCategory" required></select>
+            </div>
+
+            <!-- INPUT HARGA PROMO & HARGA CORET -->
+            <div class="price-group-row">
+                <div class="form-group">
+                    <label>Harga Promo / Jual (Rp) *</label>
+                    <input type="number" id="pPrice" required placeholder="380000">
+                </div>
+                <div class="form-group">
+                    <label>Harga Coret (Rp) <small>(Opsional)</small></label>
+                    <input type="number" id="pOriginalPrice" placeholder="500000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Sumber Gambar</label>
+                <div class="img-option-tabs">
+                    <label><input type="radio" name="imgSource" value="file" checked onclick="toggleImgInput('file')"> Upload File</label>
+                    <label><input type="radio" name="imgSource" value="url" onclick="toggleImgInput('url')"> Link URL</label>
+                </div>
+
+                <div id="inputBoxFile">
+                    <input type="file" id="pFile" accept="image/*" onchange="handleFileSelect(event)">
+                </div>
+
+                <div id="inputBoxUrl" style="display: none;">
+                    <input type="url" id="pUrl" placeholder="https://example.com/gambar.jpg" oninput="handleUrlSelect(event)">
+                </div>
+
+                <input type="hidden" id="pImgData">
+
+                <div class="img-preview-box">
+                    <img id="imgPreview" src="" alt="Preview Gambar" style="display:none;">
+                    <span id="previewPlaceholder" style="font-size:10px; color:var(--text-muted);">Belum ada gambar</span>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                <button type="button" onclick="closeProductModal()" style="background:#374151; color:white; border:none; padding:8px 12px; border-radius:6px;">Batal</button>
+                <button type="submit" class="btn-add" style="padding:8px 12px;">Simpan Produk</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // LOAD AKUN ADMIN & WA DARI LOCALSTORAGE
+    let passAdmin = localStorage.getItem('techcare_admin_pass') || "210301";
+    let nomorWaAdmin = localStorage.getItem('techcare_admin_wa') || "628123456789";
+    let isAdmin = false;
+
+    // DEFAULT DATA TOKO
+    const defaultStoreProfile = {
+        name: "TECHCARE TEKNOLOGI",
+        slogan: "Solusi & Sparepart Terpercaya",
+        logo: ""
+    };
+
+    const defaultCategories = ["CCTV", "Hardware PC"];
+    const defaultProducts = [
+        { name: "CCTV Hikvision ColorVu 2MP", category: "CCTV", price: 380000, originalPrice: 450000, img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
+        { name: "Power Supply PC 500W Pure", category: "Hardware PC", price: 450000, originalPrice: 520000, img: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400" }
+    ];
+
+    let storeProfile = JSON.parse(localStorage.getItem('techcare_store_profile')) || defaultStoreProfile;
+    let categories = JSON.parse(localStorage.getItem('techcare_categories')) || defaultCategories;
+    let products = JSON.parse(localStorage.getItem('techcare_dark_products')) || defaultProducts;
+    let cart = JSON.parse(localStorage.getItem('techcare_dark_cart')) || [];
+
+    function applyStoreProfile() {
+        document.getElementById('displayStoreName').innerText = storeProfile.name;
+        document.getElementById('promoStoreTitle').innerText = storeProfile.name + " PROMO & DISKON";
+        document.getElementById('displayStoreSlogan').innerText = storeProfile.slogan || "Solusi Terpercaya";
+        document.getElementById('pageTitle').innerText = storeProfile.name + " - Katalog Produk";
+
+        const logoImg = document.getElementById('displayStoreLogo');
+        if (storeProfile.logo) {
+            logoImg.src = storeProfile.logo;
+            logoImg.style.display = 'block';
+        } else {
+            logoImg.style.display = 'none';
+        }
+    }
+
+    function openStoreModal() {
+        document.getElementById('inputStoreName').value = storeProfile.name;
+        document.getElementById('inputStoreSlogan').value = storeProfile.slogan || "";
+        document.getElementById('inputStoreWa').value = nomorWaAdmin;
+        document.getElementById('inputAdminPass').value = ""; 
+        
+        const existingLogo = storeProfile.logo || "";
+        if (existingLogo.startsWith('data:image')) {
+            document.querySelector('input[name="logoSource"][value="file"]').checked = true;
+            toggleLogoInput('file');
+        } else {
+            document.querySelector('input[name="logoSource"][value="url"]').checked = true;
+            toggleLogoInput('url');
+            document.getElementById('logoUrl').value = existingLogo;
+        }
+
+        if (existingLogo) {
+            setLogoPreview(existingLogo);
+        } else {
+            clearLogoPreview();
+        }
+
+        document.getElementById('storeModal').classList.add('active');
+    }
+
+    function closeStoreModal() {
+        document.getElementById('storeModal').classList.remove('active');
+    }
+
+    function toggleLogoInput(type) {
+        if(type === 'file') {
+            document.getElementById('boxLogoFile').style.display = 'block';
+            document.getElementById('boxLogoUrl').style.display = 'none';
+        } else {
+            document.getElementById('boxLogoFile').style.display = 'none';
+            document.getElementById('boxLogoUrl').style.display = 'block';
+        }
+    }
+
+    function handleLogoFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) { setLogoPreview(evt.target.result); };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleLogoUrlSelect(e) {
+        const url = e.target.value.trim();
+        if(url) { setLogoPreview(url); } else { clearLogoPreview(); }
+    }
+
+    function setLogoPreview(src) {
+        const img = document.getElementById('logoPreview');
+        const ph = document.getElementById('logoPreviewPlaceholder');
+        document.getElementById('storeLogoData').value = src;
+        img.src = src;
+        img.style.display = 'block';
+        ph.style.display = 'none';
+    }
+
+    function clearLogoPreview() {
+        const img = document.getElementById('logoPreview');
+        const ph = document.getElementById('logoPreviewPlaceholder');
+        document.getElementById('storeLogoData').value = '';
+        img.src = '';
+        img.style.display = 'none';
+        ph.style.display = 'block';
+    }
+
+    function saveStoreSettings(e) {
+        e.preventDefault();
+        storeProfile.name = document.getElementById('inputStoreName').value.trim();
+        storeProfile.slogan = document.getElementById('inputStoreSlogan').value.trim();
+        storeProfile.logo = document.getElementById('storeLogoData').value;
+
+        const waBaru = document.getElementById('inputStoreWa').value.trim();
+        if(waBaru) {
+            nomorWaAdmin = waBaru;
+            localStorage.setItem('techcare_admin_wa', nomorWaAdmin);
+        }
+
+        const passBaru = document.getElementById('inputAdminPass').value.trim();
+        if(passBaru) {
+            passAdmin = passBaru;
+            localStorage.setItem('techcare_admin_pass', passAdmin);
+        }
+
+        localStorage.setItem('techcare_store_profile', JSON.stringify(storeProfile));
+        applyStoreProfile();
+        closeStoreModal();
+        alert("Pengaturan profil, WhatsApp, dan Password berhasil disimpan!");
+    }
+
+    function formatRupiah(num) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+    }
+
+    function renderAdminCatList() {
+        const container = document.getElementById('adminCatList');
+        const pCatSelect = document.getElementById('pCategory');
+        container.innerHTML = '';
+        pCatSelect.innerHTML = '';
+
+        categories.forEach((cat, idx) => {
+            const row = document.createElement('div');
+            row.className = 'cat-item-row';
+            row.innerHTML = `
+                <span>${cat}</span>
+                <button class="btn-del-cat" onclick="deleteCategory(${idx})">Hapus</button>
+            `;
+            container.appendChild(row);
+            pCatSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+    }
+
+    function renderProducts(items) {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '';
+
+        if(items.length === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#9ca3af; padding:20px; font-size:12px;">Produk tidak ditemukan.</p>';
+            return;
+        }
+
+        items.forEach((item, index) => {
+            const defaultImg = 'https://via.placeholder.com/300x200?text=No+Image';
+            
+            // Format Harga Coret
+            let originalPriceHTML = '';
+            if (item.originalPrice && Number(item.originalPrice) > Number(item.price)) {
+                originalPriceHTML = `<span class="original-price">${formatRupiah(item.originalPrice)}</span>`;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <img src="${item.img || defaultImg}" class="product-img" alt="${item.name}" onerror="this.src='${defaultImg}'">
+                <div class="product-info">
+                    <span class="cat-tag">${item.category || 'UMUM'}</span>
+                    <div class="product-name">${item.name}</div>
+                    <div class="price-container">
+                        ${originalPriceHTML}
+                        <div class="product-price">${formatRupiah(item.price)}</div>
+                    </div>
+                    <button class="btn-buy" onclick="tambahKeKeranjang(${index})">+ Keranjang</button>
+                    ${isAdmin ? `
+                    <div class="admin-btns">
+                        <button class="btn-edit" onclick="openProductModal('edit', ${index})">Edit</button>
+                        <button class="btn-del" onclick="deleteProduct(${index})">Hapus</button>
+                    </div>` : ''}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        updateCartUI();
+    }
+
+    function filterProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = products.filter(p => {
+            return p.name.toLowerCase().includes(query) || (p.category && p.category.toLowerCase().includes(query));
+        });
+        renderProducts(filtered);
+    }
+
+    function toggleAlamatMethod(method) {
+        const containerManual = document.getElementById('containerAlamatManual');
+        const containerMaps = document.getElementById('containerAlamatMaps');
+
+        if (method === 'manual') {
+            containerManual.style.display = 'block';
+            containerMaps.style.display = 'none';
+        } else {
+            containerManual.style.display = 'none';
+            containerMaps.style.display = 'block';
+        }
+    }
+
+    function tambahKeKeranjang(index) {
+        const item = products[index];
+        const found = cart.find(c => c.name === item.name);
+        if (found) { 
+            found.qty += 1; 
+        } else { 
+            cart.push({ ...item, qty: 1 }); 
+        }
+        saveCart();
+    }
+
+    function updateQtyCart(index, change) {
+        cart[index].qty += change;
+        if (cart[index].qty <= 0) {
+            cart.splice(index, 1);
+        }
+        saveCart();
+        renderCartModalItems();
+    }
+
+    function updateCartUI() {
+        const totalQty = cart.reduce((acc, curr) => acc + curr.qty, 0);
+        const totalPrice = cart.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
+
+        document.getElementById('cartBadgeCount').innerText = totalQty;
+        document.getElementById('cartTotalItemsText').innerText = `${totalQty} item`;
+        document.getElementById('barTotal').innerText = formatRupiah(totalPrice);
+        document.getElementById('modalCartTotal').innerText = formatRupiah(totalPrice);
+    }
+
+    function saveCart() {
+        localStorage.setItem('techcare_dark_cart', JSON.stringify(cart));
+        updateCartUI();
+    }
+
+    function bukaKeranjangModal() {
+        if(cart.length === 0) {
+            alert("Keranjang belanja Anda masih kosong!");
+            return;
+        }
+        renderCartModalItems();
+        document.getElementById('cartModal').classList.add('active');
+    }
+
+    function closeCartModal() {
+        document.getElementById('cartModal').classList.remove('active');
+    }
+
+    function renderCartModalItems() {
+        const container = document.getElementById('cartItemsList');
+        container.innerHTML = '';
+
+        if(cart.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#9ca3af; font-size:12px; padding:10px;">Keranjang kosong.</p>';
+            closeCartModal();
+            return;
+        }
+
+        cart.forEach((item, idx) => {
+            const row = document.createElement('div');
+            row.className = 'cart-item';
+            row.innerHTML = `
+                <div class="cart-item-info">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">${formatRupiah(item.price)}</div>
+                </div>
+                <div class="cart-qty-control">
+                    <button class="btn-qty" onclick="updateQtyCart(${idx}, -1)">-</button>
+                    <span style="font-size:12px; font-weight:bold; width:20px; text-align:center;">${item.qty}</span>
+                    <button class="btn-qty" onclick="updateQtyCart(${idx}, 1)">+</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function checkoutWhatsApp() {
+        if (cart.length === 0) return;
+
+        const custName = document.getElementById('custName').value.trim();
+        const custPhone = document.getElementById('custPhone').value.trim();
+        const addrMethod = document.querySelector('input[name="addrMethod"]:checked').value;
+        
+        let custAddress = "";
+        if (addrMethod === "manual") {
+            custAddress = document.getElementById('custAddress').value.trim();
+        } else {
+            custAddress = document.getElementById('custMaps').value.trim();
+        }
+
+        if (!custName || !custPhone || !custAddress) {
+            alert("Mohon lengkapi Nama, Nomor HP, dan Alamat Pengiriman!");
+            return;
+        }
+
+        let pesan = `Halo ${storeProfile.name}, saya mau order:\n\n`;
+        pesan += `*-- DATA PEMESAN --*\n`;
+        pesan += `👤 Nama: ${custName}\n`;
+        pesan += `📱 No. HP: ${custPhone}\n`;
+        pesan += `📍 Alamat (${addrMethod === 'manual' ? 'Ketik Manual' : 'Google Maps'}): ${custAddress}\n\n`;
+
+        pesan += `*-- DETAIL PESANAN --*\n`;
+        let total = 0;
+
+        cart.forEach((item, i) => {
+            let subtotal = item.price * item.qty;
+            total += subtotal;
+            pesan += `${i + 1}. ${item.name} (${item.qty}x) = ${formatRupiah(subtotal)}\n`;
+        });
+
+        pesan += `\n*TOTAL PESANAN: ${formatRupiah(total)}*`;
+        pesan += `\n\nMohon konfirmasi dan informasikan total biaya ongkirnya, terima kasih!`;
+
+        let urlWA = `https://wa.me/${nomorWaAdmin}?text=${encodeURIComponent(pesan)}`;
+        window.open(urlWA, '_blank');
+    }
+
+    function toggleImgInput(type) {
+        if(type === 'file') {
+            document.getElementById('inputBoxFile').style.display = 'block';
+            document.getElementById('inputBoxUrl').style.display = 'none';
+        } else {
+            document.getElementById('inputBoxFile').style.display = 'none';
+            document.getElementById('inputBoxUrl').style.display = 'block';
+        }
+    }
+
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) { setPreview(evt.target.result); };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleUrlSelect(e) {
+        const url = e.target.value.trim();
+        if(url) { setPreview(url); } else { clearPreview(); }
+    }
+
+    function setPreview(src) {
+        const img = document.getElementById('imgPreview');
+        const ph = document.getElementById('previewPlaceholder');
+        document.getElementById('pImgData').value = src;
+        img.src = src;
+        img.style.display = 'block';
+        ph.style.display = 'none';
+    }
+
+    function clearPreview() {
+        const img = document.getElementById('imgPreview');
+        const ph = document.getElementById('previewPlaceholder');
+        document.getElementById('pImgData').value = '';
+        img.src = '';
+        img.style.display = 'none';
+        ph.style.display = 'block';
+    }
+
+    function openCatModal() { 
+        renderAdminCatList();
+        document.getElementById('catModal').classList.add('active'); 
+    }
+    function closeCatModal() { document.getElementById('catModal').classList.remove('active'); }
+
+    function saveCategory(e) {
+        e.preventDefault();
+        const input = document.getElementById('newCatName');
+        const catName = input.value.trim();
+        if (catName && !categories.includes(catName)) {
+            categories.push(catName);
+            localStorage.setItem('techcare_categories', JSON.stringify(categories));
+            renderAdminCatList();
+            input.value = '';
+        }
+    }
+
+    function deleteCategory(idx) {
+        if (confirm(`Hapus kategori "${categories[idx]}"?`)) {
+            categories.splice(idx, 1);
+            localStorage.setItem('techcare_categories', JSON.stringify(categories));
+            renderAdminCatList();
+        }
+    }
+
+    function openProductModal(mode, idx = null) {
+        renderAdminCatList();
+        document.getElementById('productModal').classList.add('active');
+        
+        if (mode === 'edit') {
+            document.getElementById('modalTitle').innerText = "Edit Produk";
+            document.getElementById('editIndex').value = idx;
+            document.getElementById('pName').value = products[idx].name;
+            document.getElementById('pCategory').value = products[idx].category;
+            document.getElementById('pPrice').value = products[idx].price;
+            document.getElementById('pOriginalPrice').value = products[idx].originalPrice || "";
+            
+            const existingImg = products[idx].img || "";
+            if (existingImg.startsWith('data:image')) {
+                document.querySelector('input[name="imgSource"][value="file"]').checked = true;
+                toggleImgInput('file');
+            } else {
+                document.querySelector('input[name="imgSource"][value="url"]').checked = true;
+                toggleImgInput('url');
+                document.getElementById('pUrl').value = existingImg;
+            }
+            setPreview(existingImg);
+        } else {
+            document.getElementById('modalTitle').innerText = "Tambah Produk";
+            document.getElementById('editIndex').value = "";
+            document.getElementById('productForm').reset();
+            document.querySelector('input[name="imgSource"][value="file"]').checked = true;
+            toggleImgInput('file');
+            clearPreview();
+        }
+    }
+
+    function closeProductModal() { document.getElementById('productModal').classList.remove('active'); }
+
+    function saveProduct(e) {
+        e.preventDefault();
+        const idx = document.getElementById('editIndex').value;
+        const origPriceVal = document.getElementById('pOriginalPrice').value;
+
+        const newP = {
+            name: document.getElementById('pName').value,
+            category: document.getElementById('pCategory').value,
+            price: Number(document.getElementById('pPrice').value),
+            originalPrice: origPriceVal ? Number(origPriceVal) : null,
+            img: document.getElementById('pImgData').value
+        };
+
+        if (idx === "") {
+            products.push(newP);
+        } else {
+            products[Number(idx)] = newP;
+        }
+
+        localStorage.setItem('techcare_dark_products', JSON.stringify(products));
+        filterProducts();
+        closeProductModal();
+    }
+
+    function deleteProduct(idx) {
+        if (confirm(`Hapus "${products[idx].name}"?`)) {
+            products.splice(idx, 1);
+            localStorage.setItem('techcare_dark_products', JSON.stringify(products));
+            filterProducts();
+        }
+    }
+
+    function aksesAdmin() {
+        if (isAdmin) {
+            isAdmin = false;
+            document.getElementById('adminButtons').style.display = 'none';
+            document.getElementById('btnAdminAuth').innerText = "🔒 Login Admin";
+            alert("Logout Admin berhasil!");
+        } else {
+            let p = prompt("Masukkan Password Admin:");
+            if (p === passAdmin) {
+                isAdmin = true;
+                document.getElementById('adminButtons').style.display = 'flex';
+                document.getElementById('btnAdminAuth').innerText = "🔓 Logout Admin";
+                alert("Akses Admin Diterima!");
+            } else if(p !== null) {
+                alert("Password Salah!");
+            }
+        }
+        filterProducts();
+    }
+
+    // INITIAL LOAD
+    applyStoreProfile();
+    filterProducts();
+</script>
+</body>
+</html>
