@@ -3,242 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Toko Realtime</title>
-    <!-- Tailwind CSS CDN -->
+    <title>DEALOVA - Katalog Produk Realtime</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center p-2 sm:p-4">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
-    <!-- Container Utama App -->
-    <div class="w-full max-w-md md:max-w-4xl bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden flex flex-col min-h-[90vh]">
-        
-        <!-- Header / Nama Toko Realtime -->
-        <header class="bg-slate-800/90 backdrop-blur border-b border-slate-700 p-4 sticky top-0 z-20 flex justify-between items-center">
-            <div>
-                <h1 id="storeNameDisplay" class="text-xl font-bold text-amber-500 tracking-wide uppercase">
-                    Memuat Nama Toko...
-                </h1>
-                <p id="storeTaglineDisplay" class="text-xs text-slate-400">Solusi & Sparepart Terpercaya</p>
-            </div>
-            <button onclick="toggleAdminModal()" class="bg-slate-700 hover:bg-slate-600 text-amber-400 border border-amber-500/30 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
-                <i class="fa-solid fa-lock"></i> Login Admin
-            </button>
-        </header>
-
-        <!-- Search Bar -->
-        <div class="p-4 bg-slate-800/50 border-b border-slate-700/50">
-            <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                <input type="text" id="searchInput" oninput="renderProducts()" placeholder="Cari produk..." 
-                    class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition">
-            </div>
-        </div>
-
-        <!-- Banner Promo -->
-        <div class="p-4">
-            <div class="bg-gradient-to-r from-amber-600/20 via-slate-800 to-amber-600/20 border border-amber-500/30 rounded-xl p-4 text-center">
-                <span class="bg-amber-500 text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">⚡ Promo Spesial</span>
-                <h2 id="bannerTitleDisplay" class="text-base font-bold text-slate-100 mt-2">KATALOG DIGITAL REALTIME</h2>
-                <p class="text-xs text-slate-400 mt-0.5">Solusi Kebutuhan Teknologi Terpercaya</p>
-            </div>
-        </div>
-
-        <!-- Section Katalog Produk -->
-        <main class="flex-1 p-4">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Katalog Produk</h3>
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                <!-- Data Produk dikirim via JS Realtime -->
-            </div>
-        </main>
-
-        <!-- Footer / Cart Bar -->
-        <footer class="bg-slate-800 border-t border-slate-700 p-3 flex justify-between items-center sticky bottom-0 z-20">
-            <div class="flex items-center gap-2">
-                <div class="relative bg-slate-900 p-2.5 rounded-lg border border-slate-700">
-                    <i class="fa-solid fa-cart-shopping text-amber-500"></i>
-                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-amber-500 text-slate-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-4 py-3 shadow-lg">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-500 text-slate-900 p-2 rounded-lg font-bold">
+                    <i class="fa-solid fa-store"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] text-slate-400 uppercase">Total Pesanan (<span id="cartCount">0</span> item)</p>
-                    <p id="cartTotal" class="text-sm font-bold text-slate-100">Rp 0</p>
+                    <h1 class="font-bold text-lg text-amber-500 leading-tight">DEALOVA</h1>
+                    <p class="text-xs text-slate-400">Solusi & Sparepart Terpercaya</p>
                 </div>
             </div>
-            <button onclick="sendToWhatsApp()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition">
-                Checkout WA <i class="fa-solid fa-arrow-right"></i>
+            <button onclick="toggleAdminModal()" class="bg-slate-700 hover:bg-slate-600 text-amber-400 text-xs px-3 py-2 rounded-lg border border-slate-600 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-lock"></i>
+                <span>Panel Admin</span>
             </button>
-        </footer>
-    </div>
+        </div>
+    </header>
 
-    <!-- Modal Admin (Pengaturan Toko & Produk) -->
-    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto">
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto p-4 space-y-6">
+        <div class="bg-gradient-to-r from-amber-600 to-amber-800 rounded-2xl p-6 shadow-xl text-center border border-amber-500/30">
+            <span class="bg-amber-400/20 text-amber-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Promo Spesial</span>
+            <h2 class="text-2xl font-extrabold text-white mt-2">DEALOVA PROMO & DISKON</h2>
+            <p class="text-amber-100 text-sm mt-1">Solusi Kebutuhan Teknologi Terpercaya</p>
+        </div>
+
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-slate-200 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-stacked text-amber-500"></i> KATALOG PRODUK
+                </h3>
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span> Realtime Active
+                </span>
+            </div>
+
+            <div id="loading" class="text-center py-12">
+                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-amber-500"></i>
+                <p class="text-xs text-slate-400 mt-2">Memuat data produk...</p>
+            </div>
+
+            <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 hidden"></div>
+            
+            <div id="emptyState" class="hidden text-center py-12 bg-slate-800/50 rounded-2xl border border-slate-800">
+                <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-2"></i>
+                <p class="text-slate-400 text-sm">Belum ada produk yang ditambahkan.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Admin -->
+    <div id="adminModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <h3 class="font-bold text-amber-500">Panel Pengaturan Toko</h3>
-                <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+                <h3 class="font-bold text-amber-400 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> Tambah Produk Baru
+                </h3>
+                <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <!-- Form Ubah Nama Toko -->
-            <div class="space-y-2">
-                <label class="text-xs text-slate-300 font-semibold">Nama Toko (Realtime di Semua Perangkat):</label>
-                <input type="text" id="storeNameInput" placeholder="Contoh: TECHCARE SOLUTION" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200">
-                <button onclick="saveStoreSettings()" class="w-full bg-amber-500 text-slate-950 font-bold text-xs py-2 rounded-lg hover:bg-amber-400">
-                    Simpan Nama Toko
-                </button>
-            </div>
-
-            <hr class="border-slate-700">
-
-            <!-- Form Tambah Produk -->
-            <div class="space-y-2">
-                <h4 class="text-xs text-slate-300 font-semibold">Tambah Produk Baru:</h4>
-                <input type="text" id="prodName" placeholder="Nama Produk" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200">
-                <input type="number" id="prodPrice" placeholder="Harga (Contoh: 50000)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200">
-                <button onclick="addNewProduct()" class="w-full bg-slate-700 border border-amber-500/40 text-amber-400 font-bold text-xs py-2 rounded-lg hover:bg-slate-600">
-                    + Tambah Produk
-                </button>
-            </div>
+            <form id="addProductForm" onsubmit="saveProduct(event)" class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-300 block mb-1">Nama Produk</label>
+                    <input type="text" id="pName" required placeholder="Contoh: RAM DDR3 4GB" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 block mb-1">Harga (Rp)</label>
+                    <input type="number" id="pPrice" required placeholder="150000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 block mb-1">URL Gambar (Opsional)</label>
+                    <input type="url" id="pImg" placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-300 block mb-1">Deskripsi Ringkas</label>
+                    <textarea id="pDesc" rows="2" placeholder="Stok ready, garansi 1 bulan" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500"></textarea>
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="toggleAdminModal()" class="w-1/2 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2.5 rounded-lg text-sm font-semibold">Batal</button>
+                    <button type="submit" id="btnSubmit" class="w-1/2 bg-amber-500 hover:bg-amber-600 text-slate-950 py-2.5 rounded-lg text-sm font-bold flex justify-center items-center gap-2">
+                        <span>Simpan</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Firebase Realtime Database SDK -->
+    <!-- Firebase SDK (Menyambungkan ke Project DEALOVA kamu) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Database Realtime Gratis
+        // Config Firebase milikmu
         const firebaseConfig = {
-            databaseURL: "https://techcare-catalog-default-rtdb.asia-southeast1.firebasedatabase.app"
+            apiKey: "AIzaSyBHDgvjzgC_zd0VjTPOUHDXE-8O3CKPws",
+            authDomain: "dealova-1c8d9.firebaseapp.com",
+            projectId: "dealova-1c8d9",
+            storageBucket: "dealova-1c8d9.firebasestorage.app",
+            messagingSenderId: "647606626962",
+            appId: "1:647606626962:web:aa540cf0be387538ed544b",
+            measurementId: "G-QKN7PXFPZ5"
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const db = getFirestore(app);
+        const productsCol = collection(db, 'products');
 
-        // Referensi Node Database
-        const settingsRef = ref(db, 'storeSettings');
-        const productsRef = ref(db, 'products');
-
-        let productsData = {};
-        let cart = [];
-
-        // 1. DENGARKAN PERUBAHAN NAMA TOKO SECARA REALTIME
-        onValue(settingsRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data && data.storeName) {
-                document.getElementById('storeNameDisplay').innerText = data.storeName;
-                document.getElementById('bannerTitleDisplay').innerText = data.storeName + " PROMO";
-            } else {
-                document.getElementById('storeNameDisplay').innerText = "TECHCARE SOLUTION";
-            }
-        });
-
-        // 2. DENGARKAN PERUBAHAN PRODUK SECARA REALTIME
-        onValue(productsRef, (snapshot) => {
-            productsData = snapshot.val() || {};
-            window.renderProducts();
-        });
-
-        // FUNGSI SIMPAN NAMA TOKO KE FIREBASE
-        window.saveStoreSettings = function() {
-            const newName = document.getElementById('storeNameInput').value.trim();
-            if(!newName) return alert("Masukkan nama toko terlebih dahulu!");
-            
-            set(settingsRef, {
-                storeName: newName
-            }).then(() => {
-                alert("Nama toko berhasil diperbarui ke semua perangkat secara realtime!");
-                document.getElementById('storeNameInput').value = "";
-                window.toggleAdminModal();
-            });
-        };
-
-        // FUNGSI TAMBAH PRODUK KE FIREBASE
-        window.addNewProduct = function() {
-            const name = document.getElementById('prodName').value.trim();
-            const price = parseInt(document.getElementById('prodPrice').value);
-
-            if(!name || !price) return alert("Lengkapi nama dan harga produk!");
-
-            push(productsRef, {
-                name: name,
-                price: price
-            }).then(() => {
-                document.getElementById('prodName').value = "";
-                document.getElementById('prodPrice').value = "";
-                alert("Produk berhasil ditambahkan!");
-            });
-        };
-
-        // FUNGSI HAPUS PRODUK FROM FIREBASE
-        window.deleteProduct = function(id) {
-            if(confirm("Hapus produk ini?")) {
-                remove(ref(db, 'products/' + id));
-            }
-        };
-
-        // RENDER PRODUK KE HALAMAN WEB
-        window.renderProducts = function() {
+        // Firestore Realtime Listener
+        onSnapshot(productsCol, (snapshot) => {
             const grid = document.getElementById('productGrid');
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            grid.innerHTML = "";
+            const loading = document.getElementById('loading');
+            const emptyState = document.getElementById('emptyState');
+            
+            grid.innerHTML = '';
+            loading.classList.add('hidden');
 
-            const keys = Object.keys(productsData);
-            let count = 0;
+            if (snapshot.empty) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
 
-            keys.forEach(key => {
-                const item = productsData[key];
-                if(item.name.toLowerCase().includes(search)) {
-                    count++;
-                    grid.innerHTML += `
-                        <div class="bg-slate-900 border border-slate-700/80 rounded-xl p-3 flex flex-col justify-between hover:border-amber-500/50 transition">
-                            <div>
-                                <h4 class="font-semibold text-slate-100 text-sm">${item.name}</h4>
-                                <p class="text-amber-500 font-bold text-xs mt-1">Rp ${item.price.toLocaleString('id-ID')}</p>
-                            </div>
-                            <div class="flex items-center gap-2 mt-3">
-                                <button onclick="addToCart('${item.name}', ${item.price})" class="flex-1 bg-amber-500/10 hover:bg-amber-500 hover:text-slate-950 text-amber-500 border border-amber-500/30 text-xs py-1.5 rounded-lg font-bold transition">
-                                    + Keranjang
-                                </button>
-                                <button onclick="deleteProduct('${key}')" class="text-red-400 hover:text-red-300 text-xs p-1.5">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
+            emptyState.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            snapshot.forEach((docSnapshot) => {
+                const item = docSnapshot.data();
+                const id = docSnapshot.id;
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 border border-slate-700/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md relative group hover:border-amber-500/50 transition";
+                
+                const imgUrl = item.image || 'https://via.placeholder.com/300x200/1e293b/94a3b8?text=Produk+DEALOVA';
+                const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.price || 0);
+
+                card.innerHTML = `
+                    <div class="relative">
+                        <img src="${imgUrl}" class="w-full h-32 object-cover bg-slate-900" alt="${item.name}">
+                        <button onclick="deleteProduct('${id}')" class="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow transition opacity-90">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between space-y-2">
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100 line-clamp-1">${item.name}</h4>
+                            <p class="text-xs text-slate-400 line-clamp-2 mt-0.5">${item.desc || '-'}</p>
                         </div>
-                    `;
-                }
+                        <div>
+                            <p class="font-extrabold text-amber-400 text-sm">${formattedPrice}</p>
+                            <a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20mau%20pesan%20${encodeURIComponent(item.name)}" target="_blank" class="mt-2 w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs py-1.5 rounded-lg flex items-center justify-center gap-1 font-semibold transition">
+                                <i class="fa-brands fa-whatsapp"></i> Beli
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
             });
+        });
 
-            if(count === 0) {
-                grid.innerHTML = `<p class="text-xs text-slate-500 text-center col-span-full py-8">Belum ada produk. Tambahkan lewat menu Login Admin.</p>`;
+        // Simpan Produk
+        window.saveProduct = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+            const name = document.getElementById('pName').value;
+            const price = Number(document.getElementById('pPrice').value);
+            const image = document.getElementById('pImg').value;
+            const desc = document.getElementById('pDesc').value;
+
+            try {
+                await addDoc(productsCol, {
+                    name,
+                    price,
+                    image,
+                    desc,
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('addProductForm').reset();
+                toggleAdminModal();
+            } catch (err) {
+                alert("Gagal menyimpan: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Simpan</span>';
             }
         };
 
-        // MODAL TOGGLE
+        // Hapus Produk
+        window.deleteProduct = async function(id) {
+            if (confirm("Hapus produk ini?")) {
+                await deleteDoc(doc(db, 'products', id));
+            }
+        };
+
+        // Toggle Modal
         window.toggleAdminModal = function() {
-            document.getElementById('adminModal').classList.toggle('hidden');
-        };
-
-        // SISTEM KERANJANG BELANJA LOKAL
-        window.addToCart = function(name, price) {
-            cart.push({ name, price });
-            updateCartUI();
-        };
-
-        function updateCartUI() {
-            document.getElementById('cartCount').innerText = cart.length;
-            document.getElementById('cartBadge').innerText = cart.length;
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cartTotal').innerText = "Rp " + total.toLocaleString('id-ID');
-        }
-
-        window.sendToWhatsApp = function() {
-            if(cart.length === 0) return alert("Keranjang belanjaan masih kosong!");
-            let msg = "Halo, saya mau pesan:\n";
-            cart.forEach((i, idx) => { msg += `${idx+1}. ${i.name} - Rp ${i.price.toLocaleString('id-ID')}\n`; });
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            msg += `\n*Total: Rp ${total.toLocaleString('id-ID')}*`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+            const modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden');
         };
     </script>
 </body>
