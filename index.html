@@ -155,17 +155,6 @@
             font-weight: 700;
             text-transform: uppercase;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #10b981;
-            border-radius: 50%;
-            display: inline-block;
         }
 
         .admin-action-btns {
@@ -619,7 +608,7 @@
         </div>
 
         <div class="section-header">
-            <span class="section-title"><span class="status-dot"></span> Katalog Produk (Realtime)</span>
+            <span class="section-title">Katalog Produk</span>
             <div class="admin-action-btns" id="adminButtons" style="display: none;">
                 <button class="btn-store-settings" onclick="openStoreModal()">⚙️ Profil & Admin</button>
                 <button class="btn-add-cat" onclick="openCatModal()">📁 Kategori</button>
@@ -646,7 +635,7 @@
     </div>
 </div>
 
-<!-- MODAL EDIT PROFIL TOKO & PENGATURAN ADMIN -->
+<!-- MODAL EDIT PROFIL TOKO & PENGATURAN ADMIN (WA & PASSWORD) -->
 <div class="modal" id="storeModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -842,101 +831,62 @@
     </div>
 </div>
 
-<!-- FIREBASE INTEGRATION SCRIPT -->
 <script type="module">
+    // Import SDK Firebase Realtime Database v9
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Configuration Database Realtime
+    // PASTE KONFIGURASI FIREBASE KAMU DI SINI:
     const firebaseConfig = {
-        databaseURL: "https://techcare-catalog-default-rtdb.asia-southeast1.firebasedatabase.app"
+        apiKey: "AIzaSy...",
+        authDomain: "proyek-kamu.firebaseapp.com",
+        databaseURL: "https://proyek-kamu-default-rtdb.firebaseio.com",
+        projectId: "proyek-kamu",
+        storageBucket: "proyek-kamu.appspot.com",
+        messagingSenderId: "1234567890",
+        appId: "1:1234567890:web:abcde12345"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // References
-    const dbProductsRef = ref(db, 'products');
-    const dbCategoriesRef = ref(db, 'categories');
-    const dbStoreRef = ref(db, 'storeProfile');
+    // Global State
+    let passAdmin = localStorage.getItem('techcare_admin_pass') || "210301";
+    let nomorWaAdmin = localStorage.getItem('techcare_admin_wa') || "628123456789";
+    let isAdmin = false;
 
-    // Global variables
-    window.productsObj = {};
-    window.categories = ["CCTV", "Hardware PC"];
-    window.storeProfile = { name: "TECHCARE TEKNOLOGI", slogan: "Solusi & Sparepart Terpercaya", logo: "" };
-    window.cart = JSON.parse(localStorage.getItem('techcare_dark_cart')) || [];
-    window.passAdmin = localStorage.getItem('techcare_admin_pass') || "210301";
-    window.nomorWaAdmin = localStorage.getItem('techcare_admin_wa') || "628123456789";
-    window.isAdmin = false;
+    let storeProfile = {
+        name: "TECHCARE TEKNOLOGI",
+        slogan: "Solusi & Sparepart Terpercaya",
+        logo: ""
+    };
+    let categories = [];
+    let products = {}; // Format object key-value dari Firebase
+    let cart = JSON.parse(localStorage.getItem('techcare_dark_cart')) || [];
 
-    // Default Items to initialize if DB is empty
-    const defaultProducts = [
-        { name: "CCTV Hikvision ColorVu 2MP", category: "CCTV", price: 380000, originalPrice: 450000, img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-        { name: "Power Supply PC 500W Pure", category: "Hardware PC", price: 450000, originalPrice: 520000, img: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400" }
-    ];
-
-    // Listen Products Realtime
-    onValue(dbProductsRef, (snapshot) => {
-        const data = snapshot.val();
-        if (!data) {
-            // Push defaults if database empty
-            defaultProducts.forEach(p => push(dbProductsRef, p));
-        } else {
-            window.productsObj = data;
-            window.filterProducts();
+    // LISTEN FIREBASE REALTIME
+    onValue(ref(db, 'storeProfile'), (snapshot) => {
+        if(snapshot.exists()) {
+            storeProfile = snapshot.val();
         }
+        applyStoreProfile();
     });
 
-    // Listen Categories Realtime
-    onValue(dbCategoriesRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            window.categories = Array.isArray(data) ? data : Object.values(data);
-        } else {
-            set(dbCategoriesRef, ["CCTV", "Hardware PC"]);
-        }
-        window.renderAdminCatList();
+    onValue(ref(db, 'categories'), (snapshot) => {
+        categories = snapshot.exists() ? snapshot.val() : ["CCTV", "Hardware PC"];
+        renderAdminCatList();
     });
 
-    // Listen Store Profile Realtime
-    onValue(dbStoreRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            window.storeProfile = data;
-            if(data.wa) window.nomorWaAdmin = data.wa;
-            if(data.pass) window.passAdmin = data.pass;
-        }
-        window.applyStoreProfile();
+    onValue(ref(db, 'products'), (snapshot) => {
+        products = snapshot.exists() ? snapshot.val() : {};
+        filterProducts();
     });
 
-    // Global Action Wrappers for Firebase Sync
-    window.saveProductToDB = async function(key, productData) {
-        if (key) {
-            await set(ref(db, `products/${key}`), productData);
-        } else {
-            await push(dbProductsRef, productData);
-        }
-    };
-
-    window.deleteProductFromDB = async function(key) {
-        await remove(ref(db, `products/${key}`));
-    };
-
-    window.saveCategoriesToDB = async function(cats) {
-        await set(dbCategoriesRef, cats);
-    };
-
-    window.saveStoreSettingsToDB = async function(profileData) {
-        await set(dbStoreRef, profileData);
-    };
-</script>
-
-<script>
     function applyStoreProfile() {
         document.getElementById('displayStoreName').innerText = storeProfile.name || "TECHCARE TEKNOLOGI";
-        document.getElementById('promoStoreTitle').innerText = (storeProfile.name || "TECHCARE TEKNOLOGI") + " PROMO & DISKON";
+        document.getElementById('promoStoreTitle').innerText = (storeProfile.name || "TECHCARE") + " PROMO & DISKON";
         document.getElementById('displayStoreSlogan').innerText = storeProfile.slogan || "Solusi Terpercaya";
-        document.getElementById('pageTitle').innerText = (storeProfile.name || "TECHCARE TEKNOLOGI") + " - Katalog Produk";
+        document.getElementById('pageTitle').innerText = (storeProfile.name || "TECHCARE") + " - Katalog Produk";
 
         const logoImg = document.getElementById('displayStoreLogo');
         if (storeProfile.logo) {
@@ -947,7 +897,7 @@
         }
     }
 
-    function openStoreModal() {
+    window.openStoreModal = function() {
         document.getElementById('inputStoreName').value = storeProfile.name || "";
         document.getElementById('inputStoreSlogan').value = storeProfile.slogan || "";
         document.getElementById('inputStoreWa').value = nomorWaAdmin;
@@ -963,13 +913,20 @@
             document.getElementById('logoUrl').value = existingLogo;
         }
 
-        if (existingLogo) { setLogoPreview(existingLogo); } else { clearLogoPreview(); }
+        if (existingLogo) {
+            setLogoPreview(existingLogo);
+        } else {
+            clearLogoPreview();
+        }
+
         document.getElementById('storeModal').classList.add('active');
     }
 
-    function closeStoreModal() { document.getElementById('storeModal').classList.remove('active'); }
+    window.closeStoreModal = function() {
+        document.getElementById('storeModal').classList.remove('active');
+    }
 
-    function toggleLogoInput(type) {
+    window.toggleLogoInput = function(type) {
         if(type === 'file') {
             document.getElementById('boxLogoFile').style.display = 'block';
             document.getElementById('boxLogoUrl').style.display = 'none';
@@ -979,7 +936,7 @@
         }
     }
 
-    function handleLogoFileSelect(e) {
+    window.handleLogoFileSelect = function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -988,7 +945,7 @@
         }
     }
 
-    function handleLogoUrlSelect(e) {
+    window.handleLogoUrlSelect = function(e) {
         const url = e.target.value.trim();
         if(url) { setLogoPreview(url); } else { clearLogoPreview(); }
     }
@@ -1011,28 +968,27 @@
         ph.style.display = 'block';
     }
 
-    async function saveStoreSettings(e) {
+    window.saveStoreSettings = function(e) {
         e.preventDefault();
-        const newName = document.getElementById('inputStoreName').value.trim();
-        const newSlogan = document.getElementById('inputStoreSlogan').value.trim();
-        const newLogo = document.getElementById('storeLogoData').value;
+        storeProfile.name = document.getElementById('inputStoreName').value.trim();
+        storeProfile.slogan = document.getElementById('inputStoreSlogan').value.trim();
+        storeProfile.logo = document.getElementById('storeLogoData').value;
+
         const waBaru = document.getElementById('inputStoreWa').value.trim();
+        if(waBaru) {
+            nomorWaAdmin = waBaru;
+            localStorage.setItem('techcare_admin_wa', nomorWaAdmin);
+        }
+
         const passBaru = document.getElementById('inputAdminPass').value.trim();
+        if(passBaru) {
+            passAdmin = passBaru;
+            localStorage.setItem('techcare_admin_pass', passAdmin);
+        }
 
-        if(waBaru) { nomorWaAdmin = waBaru; localStorage.setItem('techcare_admin_wa', nomorWaAdmin); }
-        if(passBaru) { passAdmin = passBaru; localStorage.setItem('techcare_admin_pass', passAdmin); }
-
-        const profileData = {
-            name: newName,
-            slogan: newSlogan,
-            logo: newLogo,
-            wa: nomorWaAdmin,
-            pass: passAdmin
-        };
-
-        await window.saveStoreSettingsToDB(profileData);
+        set(ref(db, 'storeProfile'), storeProfile);
         closeStoreModal();
-        alert("Pengaturan profil berhasil disimpan secara Realtime!");
+        alert("Pengaturan profil, WhatsApp, dan Password berhasil disimpan!");
     }
 
     function formatRupiah(num) {
@@ -1042,8 +998,6 @@
     function renderAdminCatList() {
         const container = document.getElementById('adminCatList');
         const pCatSelect = document.getElementById('pCategory');
-        if(!container || !pCatSelect) return;
-
         container.innerHTML = '';
         pCatSelect.innerHTML = '';
 
@@ -1059,11 +1013,11 @@
         });
     }
 
-    function renderProducts(itemsObj) {
+    function renderProducts(items) {
         const grid = document.getElementById('productGrid');
         grid.innerHTML = '';
 
-        const keys = Object.keys(itemsObj);
+        const keys = Object.keys(items);
 
         if(keys.length === 0) {
             grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#9ca3af; padding:20px; font-size:12px;">Produk tidak ditemukan.</p>';
@@ -1071,7 +1025,7 @@
         }
 
         keys.forEach((key) => {
-            const item = itemsObj[key];
+            const item = items[key];
             const defaultImg = 'https://via.placeholder.com/300x200?text=No+Image';
             
             let originalPriceHTML = '';
@@ -1103,12 +1057,12 @@
         updateCartUI();
     }
 
-    function filterProducts() {
+    window.filterProducts = function() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         const filtered = {};
-        
-        Object.keys(productsObj).forEach(key => {
-            const p = productsObj[key];
+
+        Object.keys(products).forEach(key => {
+            const p = products[key];
             if (p.name.toLowerCase().includes(query) || (p.category && p.category.toLowerCase().includes(query))) {
                 filtered[key] = p;
             }
@@ -1117,7 +1071,7 @@
         renderProducts(filtered);
     }
 
-    function toggleAlamatMethod(method) {
+    window.toggleAlamatMethod = function(method) {
         const containerManual = document.getElementById('containerAlamatManual');
         const containerMaps = document.getElementById('containerAlamatMaps');
 
@@ -1130,19 +1084,20 @@
         }
     }
 
-    function tambahKeKeranjang(key) {
-        const item = productsObj[key];
+    window.tambahKeKeranjang = function(key) {
+        const item = products[key];
         if(!item) return;
-        const found = cart.find(c => c.name === item.name);
+
+        const found = cart.find(c => c.key === key);
         if (found) { 
             found.qty += 1; 
         } else { 
-            cart.push({ ...item, qty: 1 }); 
+            cart.push({ ...item, key: key, qty: 1 }); 
         }
         saveCart();
     }
 
-    function updateQtyCart(index, change) {
+    window.updateQtyCart = function(index, change) {
         cart[index].qty += change;
         if (cart[index].qty <= 0) {
             cart.splice(index, 1);
@@ -1166,7 +1121,7 @@
         updateCartUI();
     }
 
-    function bukaKeranjangModal() {
+    window.bukaKeranjangModal = function() {
         if(cart.length === 0) {
             alert("Keranjang belanja Anda masih kosong!");
             return;
@@ -1175,7 +1130,7 @@
         document.getElementById('cartModal').classList.add('active');
     }
 
-    function closeCartModal() {
+    window.closeCartModal = function() {
         document.getElementById('cartModal').classList.remove('active');
     }
 
@@ -1207,7 +1162,7 @@
         });
     }
 
-    function checkoutWhatsApp() {
+    window.checkoutWhatsApp = function() {
         if (cart.length === 0) return;
 
         const custName = document.getElementById('custName').value.trim();
@@ -1226,7 +1181,7 @@
             return;
         }
 
-        let pesan = `Halo ${storeProfile.name || 'TECHCARE'}, saya mau order:\n\n`;
+        let pesan = `Halo ${storeProfile.name || 'Admin'}, saya mau order:\n\n`;
         pesan += `*-- DATA PEMESAN --*\n`;
         pesan += `👤 Nama: ${custName}\n`;
         pesan += `📱 No. HP: ${custPhone}\n`;
@@ -1248,7 +1203,7 @@
         window.open(urlWA, '_blank');
     }
 
-    function toggleImgInput(type) {
+    window.toggleImgInput = function(type) {
         if(type === 'file') {
             document.getElementById('inputBoxFile').style.display = 'block';
             document.getElementById('inputBoxUrl').style.display = 'none';
@@ -1258,7 +1213,7 @@
         }
     }
 
-    function handleFileSelect(e) {
+    window.handleFileSelect = function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -1267,7 +1222,7 @@
         }
     }
 
-    function handleUrlSelect(e) {
+    window.handleUrlSelect = function(e) {
         const url = e.target.value.trim();
         if(url) { setPreview(url); } else { clearPreview(); }
     }
@@ -1290,44 +1245,44 @@
         ph.style.display = 'block';
     }
 
-    function openCatModal() { 
+    window.openCatModal = function() { 
         renderAdminCatList();
         document.getElementById('catModal').classList.add('active'); 
     }
-    function closeCatModal() { document.getElementById('catModal').classList.remove('active'); }
+    window.closeCatModal = function() { document.getElementById('catModal').classList.remove('active'); }
 
-    async function saveCategory(e) {
+    window.saveCategory = function(e) {
         e.preventDefault();
         const input = document.getElementById('newCatName');
         const catName = input.value.trim();
         if (catName && !categories.includes(catName)) {
             categories.push(catName);
-            await window.saveCategoriesToDB(categories);
+            set(ref(db, 'categories'), categories);
             input.value = '';
         }
     }
 
-    async function deleteCategory(idx) {
+    window.deleteCategory = function(idx) {
         if (confirm(`Hapus kategori "${categories[idx]}"?`)) {
             categories.splice(idx, 1);
-            await window.saveCategoriesToDB(categories);
+            set(ref(db, 'categories'), categories);
         }
     }
 
-    function openProductModal(mode, key = null) {
+    window.openProductModal = function(mode, key = null) {
         renderAdminCatList();
         document.getElementById('productModal').classList.add('active');
         
-        if (mode === 'edit' && key && productsObj[key]) {
-            const item = productsObj[key];
+        if (mode === 'edit' && key && products[key]) {
+            const p = products[key];
             document.getElementById('modalTitle').innerText = "Edit Produk";
             document.getElementById('editKey').value = key;
-            document.getElementById('pName').value = item.name;
-            document.getElementById('pCategory').value = item.category;
-            document.getElementById('pPrice').value = item.price;
-            document.getElementById('pOriginalPrice').value = item.originalPrice || "";
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pOriginalPrice').value = p.originalPrice || "";
             
-            const existingImg = item.img || "";
+            const existingImg = p.img || "";
             if (existingImg.startsWith('data:image')) {
                 document.querySelector('input[name="imgSource"][value="file"]').checked = true;
                 toggleImgInput('file');
@@ -1347,9 +1302,9 @@
         }
     }
 
-    function closeProductModal() { document.getElementById('productModal').classList.remove('active'); }
+    window.closeProductModal = function() { document.getElementById('productModal').classList.remove('active'); }
 
-    async function saveProduct(e) {
+    window.saveProduct = function(e) {
         e.preventDefault();
         const key = document.getElementById('editKey').value;
         const origPriceVal = document.getElementById('pOriginalPrice').value;
@@ -1362,17 +1317,22 @@
             img: document.getElementById('pImgData').value
         };
 
-        await window.saveProductToDB(key || null, newP);
+        if (!key) {
+            push(ref(db, 'products'), newP);
+        } else {
+            set(ref(db, 'products/' + key), newP);
+        }
+
         closeProductModal();
     }
 
-    async function deleteProduct(key) {
-        if (productsObj[key] && confirm(`Hapus "${productsObj[key].name}"?`)) {
-            await window.deleteProductFromDB(key);
+    window.deleteProduct = function(key) {
+        if (products[key] && confirm(`Hapus "${products[key].name}"?`)) {
+            remove(ref(db, 'products/' + key));
         }
     }
 
-    function aksesAdmin() {
+    window.aksesAdmin = function() {
         if (isAdmin) {
             isAdmin = false;
             document.getElementById('adminButtons').style.display = 'none';
